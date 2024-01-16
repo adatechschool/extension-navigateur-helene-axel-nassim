@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="popupstyles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&family=Roboto:wght@100;300&family=VT323&family=Young+Serif&display=swap" rel="stylesheet">
+
+    <title>TimeLockR App</title>
+  </head>
+
+  <body>
+    <div class="popup">
+      <header>
+      <h1>TimeLockR_</h1>
+      <label class="switch">
+        <input type="checkbox" id="switch">
+        <span class="slider round"></span>
+      </label><br>
+      <input type="text" id="inputAdd" name="addsite" value="https://" required minlength="4" size="35" />
+
+      <input id="buttonAdd" type="reset" value="ADD" />
+    </header>
+      <div id="arrayWebsite">
+      </div>
+      <div class="website">
+      </div>
+
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

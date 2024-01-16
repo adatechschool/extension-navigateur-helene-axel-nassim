@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Go Back To Work",
+  "version": "0.1.0",
+  "description": "Restrict sites that jeopardize your productivity ",
+  "action": {
+    "default_popup":"popup.html"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*/*"],
+      "css": ["styles.css"],
+      "js": ["content.js"]
+
+    }
+  ]
+}
