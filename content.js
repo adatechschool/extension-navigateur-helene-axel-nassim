@@ -1,5 +1,5 @@
 
-// Fonction de récup liste des sites web
+// Fonction de récupération de liste des sites web
 async function getWebsiteList() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get('websiteList', (result) => {
@@ -12,7 +12,7 @@ async function getWebsiteList() {
   });
 }
 
-// Fonction de récup valeur du switch
+// Fonction de récupération de la valeur du switch
 async function getSwitchFlag() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get("switchFlag", (result) => {
@@ -31,17 +31,15 @@ async function mainContentScript() {
   try {
     // Récupérer la liste des sites web depuis le stockage local
     let websiteList = await getWebsiteList();
-    console.log(websiteList)
-    // Reste de votre code ici
+    //Récup de la valeur du flag et du time pour savoir quand rebloquer le site.
     let flagRescue = localStorage.getItem("flag");
     let timeRescue = localStorage.getItem("time");
-
     let timeNew = new Date().getTime();
+    //Recup valeur du switch de fonctionnement du script
     let switchFlag = await getSwitchFlag();
-    console.log("Le switchFalg =", switchFlag)
 
-      //attente de 2 minutes avant que le site soit a nouveau bloqué
-    if (timeNew - parseInt(timeRescue) > 120000) {
+    //attente de 16 minutes avant que le site soit a nouveau bloqué 10 seconde pour les tests(1000000)
+    if (timeNew - parseInt(timeRescue) > 10000) {
       console.log("le flag redevient null");
       flagRescue = null;
     }
@@ -55,21 +53,24 @@ async function mainContentScript() {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Décompte de 30 secondes</title>
+            <link href="https://fonts.googleapis.com/css2?family=Oswald&family=Roboto:wght@100;300&family=VT323&family=Young+Serif&display=swap" rel="stylesheet">
+
             <style>
 
             body {
               all: unset;
           }
             body {
-              color: red;
-              font-family: Verdana, Geneva, Tahoma, sans-serif;
+              color: #00FF00;
+              font-family: "VT323"!important;
               text-align: center;
               padding: 50px;
               background-color: rgb(39, 37, 37);
 
           }
           .global {
-            color : red;
+            font-family: "VT323"!important ;
+            color : #00FF00;
             position: fixed;
             top: 0;
             left: 0;
@@ -79,9 +80,10 @@ async function mainContentScript() {
 
           .countdown {
 
+              font-family: "VT323" !important;
               font-size: 24px;
               font-weight: bold;
-              color: #f91818;
+              color: #00FF00;
               border: 2px solid #353434;
               border-radius: 20px;
               background-color: #000;
@@ -89,18 +91,32 @@ async function mainContentScript() {
               top: 50%;
               left: 50%;
               transform: translate(-50%, -50%);
+              padding: 20px;
           }
+
+          #countdown {
+            font-size: 150px;
+            font-family: "VT323" !important;
+
+          }
+
+          #facebook ._-kb div {
+            font-family: "VT323" !important;
+        }
 
           img {
               margin-bottom: 15px;
               border-radius: 20px;
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
           }</style>
         </head>
         <body>
           <div class="global">
         <div class="countdown">
-        <div class="global">Vous devez attendre 30 secondes 😈</div>
-        <p id="countdown">30</p>
+        <div>Vous devez attendre 30 secondes</div>
+        <div id="countdown">00:00:30</div>
         <img src="https://media1.tenor.com/m/0yli7fSvvL0AAAAC/raccoon-yes.gif">
         </div>
         </div>
@@ -112,9 +128,21 @@ async function mainContentScript() {
         // compteur :
         let seconds = 30;
         let timer = setInterval(updateCountdown, 1000);
+        let hours = "00:"
+        let minutes = "00:"
+
 
         function updateCountdown() {
-          document.getElementById("countdown").textContent = seconds;
+          let secondsRestantes = "";
+
+          if (seconds < 10) {
+            secondsRestantes = "0" + seconds;
+          } else {
+            secondsRestantes = String(seconds);
+          }
+
+          document.getElementById("countdown").textContent = hours + minutes + secondsRestantes;
+
           if (seconds === 0) {
             clearInterval(timer);
 

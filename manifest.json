@@ -1,10 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Go Back To Work",
+  "name": "TimeLockR",
   "version": "0.1.0",
   "description": "Restrict sites that jeopardize your productivity ",
   "action": {
-    "default_popup":"popup.html"
+    "default_popup":"popup.html",
+    "default_icon": "icon.png"
   },
   "permissions": [
     "storage",
@@ -17,7 +18,6 @@
   "content_scripts": [
     {
       "matches": ["https://*/*"],
-      "css": ["styles.css"],
       "js": ["content.js"]
 
     }

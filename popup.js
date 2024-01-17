@@ -23,18 +23,6 @@ async function getSwitchFlag() {
 }
 
 
-// async function setSwitchFlag(value) {
-//   return new Promise((resolve, reject) => {
-//     chrome.storage.local.set({ "switchFlag": value }, () => {
-//       if (chrome.runtime.lastError) {
-//         reject(chrome.runtime.lastError);
-//       } else {
-//         resolve();
-//       }
-//     });
-//   });
-// }
-
 async function MySwitch() {
   try {
     const checkSwitch = document.getElementById("switch");
@@ -46,12 +34,12 @@ async function MySwitch() {
       checkSwitch.checked = false;
 
     }
+    //Event listener check l'état du switch ON/OFF
     checkSwitch.addEventListener("change", function () {
-      // Code à exécuter lorsque l'état du switch change
       if (checkSwitch.checked) {
         console.log("Switch activé");
         switchFlag = true;
-        // Mettre à jour la liste dans le stockage local
+        // mise à jour de la liste dans le stockage local chrome
        chrome.storage.local.set({ switchFlag : true }, function () {
         // Envoyer un message pour indiquer que la liste a été mise à jour
         chrome.runtime.sendMessage({
@@ -79,12 +67,13 @@ async function MySwitch() {
   }
 }
 
+
 async function main() {
   try {
     // Récupérer la liste des sites web
     let websiteList = await getWebsiteList();
     console.log(websiteList);
-    //  afficher la liste
+    //  afficher la liste des sites déjà existant dans le stockage
     if (Array.isArray(websiteList)) {
       for (let i = websiteList.length - 1; i >= 0; i--) {
         document.getElementById(
@@ -97,18 +86,18 @@ async function main() {
       websiteList = [];
     }
 
-    // écouteur d'événement pour le bouton d'ajouter
+    // écouteur d'événement pour le bouton d'ajouter au click qui lance la fonction d'ajout de nouveau site dans la liste
     document.getElementById("buttonAdd").addEventListener("click", function () {
       sumbitWebsite();
     });
-
+    // écouteur de la touche "ENTRER" qui lance la fonction d'ajout de nouveau site dans la liste
     document.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         sumbitWebsite();
       }
     });
 
-    //Fonction enregistrer un nouveau site dans le storage
+    //Fonction enregistrer un nouveau site dans le storage et l'ajouter au DOM du popup.
     function sumbitWebsite() {
       let valeurInput = document.getElementById("inputAdd").value;
       if (valeurInput.length > 0 && valeurInput.startsWith("https://www.")) {
@@ -135,12 +124,11 @@ async function main() {
         alert(`Votre site doit commencer par "https://www."`);
       }
 
-      // Afficher la liste mise à jour dans la console
-      console.log(websiteList);
+      //recharger la page pour mettre à jour la liste sur le DOM
       location.reload();
     }
 
-    //EFFACER ELEMENT DE LA LISTE
+    //Effacer un site de la liste
     for (let i = 0; i < websiteList.length; i++) {
       let eraseButton = document.getElementById(`erase${i}`);
       eraseButton.addEventListener("click", function () {
@@ -153,7 +141,7 @@ async function main() {
             nouvelleListe: websiteList,
           });
         });
-        console.log("check tab", websiteList);
+        //on recréer la liste dans le DOM sans l'élément supprimé
         document.getElementById("arrayWebsite").innerHTML = "";
         for (let i = websiteList.length - 1; i >= 0; i--) {
           document.getElementById(
